@@ -1,0 +1,162 @@
+preprocessors:
+  crop: fire.preprocessors.CropPreprocessor
+  makefloat: fire.preprocessors.MakeFloatPreprocessor
+  greyscale: fire.preprocessors.GreyscalePreprocessor
+  removebg: fire.preprocessors.RemoveBackgroundPreprocessor
+  clahe: fire.preprocessors.CLAHEPreprocessor
+
+
+preprocsteps:
+  - crop:
+      y: 252
+      x: 942
+      #dy: 2370
+      #dx: 2370
+      #y: 752
+      #x: 1442
+      dy: 1200
+      dx: 1200
+      #y: 1052
+      #x: 2000
+      #dy: 300
+      #dx: 300
+  - makefloat
+  - greyscale:
+      channel: 0
+  - removebg:
+      bgsource: testdata/DSC_0006.JPG
+      # MAX: 241.15
+      methods:
+        - sub
+        - div
+        #- signedthirdroot
+        #- divnorm
+# - clahe:
+#     clip_limit: 0.01
+#     ntiles_x: 1
+#     ntiles_y: 1
+
+procsteps:
+  # Very large clusters
+  - threshold:
+      threshold: -0.08
+      minsize: 10000
+      steps_prelabel:
+        - erode: 2
+        - remove_bordering: 10
+        - fill
+        - erode: 2
+        - open
+        - close
+      steps_postlabel:
+        - maxstddev: 0.1
+        - dilate: 5
+        - minconvexratio: 0.8
+  # Clusters of all sizes that we are certain about
+# - threshold:
+#     threshold: -0.05
+#     minsize: 200
+#     steps_prelabel:
+#       - erode
+#       - remove_bordering: 10
+#       - fill
+#       - open
+#       - calccornerresponse
+#     steps_postlabel:
+#       - dilate: 2
+#       - erode: 2
+#       - maxstddev: 0.1
+#       - maxcornerresponse: 7.
+#       - minQ: 0.3
+#       - dilate: 2
+#       - minconvexratio: 0.85
+# # Midsized clusters (out of our FCD range) that weren't detected previously
+# - threshold:
+#     threshold: -0.03
+#     minsize: 500
+#     maxsize: 10000
+#     steps_prelabel:
+#       - remove_bordering: 10
+#       - fill
+#       - open
+#       - calccornerresponse
+#     steps_postlabel:
+#       - maxstddev: 0.1
+#       - maxcornerresponse: 6.5
+#       - minQ: 0.5
+#       - dilate
+#       - minconvexratio: 0.9
+# OLD OLD OLD OLD OLD BELOW
+# # Very large clusters
+# - threshold:
+#     threshold: -0.06
+#     minsize: 10000
+#     steps_prelabel:
+#       - erode: 2
+#       #- remove_bordering
+#       - fill
+#       - erode: 2
+#       - open
+#       - close
+#       #- calccornerresponse
+#     steps_postlabel:
+#       - maxstddev: 0.07
+#       - dilate: 5
+#       - minconvexratio: 0.8
+# # Clusters of all sizes that we are certain about
+# - threshold:
+#     threshold: -0.05
+#     minsize: 200
+#     steps_prelabel:
+#       - erode
+#       #- remove_bordering
+#       - fill
+#       - open
+#       - calccornerresponse
+#     steps_postlabel:
+#       - dilate: 2
+#       - erode: 2
+#       - maxstddev: 0.07
+#       - maxcornerresponse: 1.
+#       #- minQ: 0.3
+#       - dilate: 2
+#       - minconvexratio: 0.85
+# # Midsized clusters (out of our FCD range) that weren't detected previously
+# - threshold:
+#     threshold: -0.03
+#     minsize: 500
+#     maxsize: 20000
+#     steps_prelabel:
+#       #- remove_bordering
+#       - fill
+#       - open
+#       #- calccornerresponse
+#     steps_postlabel:
+#       #- maxstddev: 0.1
+#       #- maxcornerresponse: 6.5
+#       #- minQ: 0.5
+#       - dilate
+#       - minconvexratio: 0.9
+  - removeouter:
+      padding: 80
+  - tiledfcd:
+      tiles: 5
+      minr: null
+      maxr: 30.
+      gaussian: 1.
+      sobel: false
+      minnorm: 3.0e-2
+      alpha: 0.5
+      beta: 0.7
+      gamma: 0.3
+      mincenterlevel: .1
+      radiusscaler: null
+      minmembers: null
+      epsilon: 1.0
+      minsamples: 1
+      maxangspread: 0.6
+  - diskextend
+
+exportsteps:
+  - string
+  - save
