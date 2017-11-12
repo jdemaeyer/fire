@@ -1,0 +1,11 @@
+# mahotas.imread was outsourced in 1.4
+mahotas<1.4
+matplotlib
+# something about array indexing changed in 1.10
+numpy<1.10
+pillow
+scikit-image
+scikit-learn
+# scipy.weave was removed in 0.19
+scipy<0.19
+pyyaml
