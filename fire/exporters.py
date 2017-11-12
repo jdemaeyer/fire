@@ -4,7 +4,7 @@ FIRE components that export DetectionInfos (to files, databases, ...)
 
 import os.path
 import numpy as np
-from FIRE.base import Exporter
+from fire.base import Exporter
 
 
 def outfilebase(infile):

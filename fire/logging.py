@@ -25,7 +25,7 @@ logging.addLevelName( logging.ERROR, colorseq(RED) + logging.getLevelName(loggin
 logging.addLevelName( logging.CRITICAL, BOLD_SEQ + colorseq(RED) + logging.getLevelName(logging.CRITICAL) + RESET_SEQ)
 
 # My logger
-logger = logging.getLogger("FIRE")
+logger = logging.getLogger("fire")
 
 logging.captureWarnings(True)
 # TODO: Get warnings from py.warnings logger and set their level to DEBUG

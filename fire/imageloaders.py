@@ -3,7 +3,7 @@ FIRE components to load image information from files. Most of these use lazy
 imports to not induce requirements that aren't actually used.
 """
 
-from FIRE.base import ImageLoader
+from fire.base import ImageLoader
 
 
 class MahotasImageLoader(ImageLoader):
